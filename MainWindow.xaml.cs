@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -36,20 +37,23 @@ namespace sokosoko
         int laterY = 3;
         int laterX = 1;
         char[,] fond;
-        bool touchPoint = false;
-        bool moveCase = false;
         bool plus = false;
-        bool color = false;
-        bool enable = false;
         int nb_DePoint = 0;
         int resultPlayer = 0;
         int laterGY;
         int laterGX;
         int ou = 0;
-        bool devantMur = false;
-        bool caseON = false;
-        bool persoON = false;
-        bool devantR = false;
+        bool wallP = false;
+        bool wallC = false;
+        bool caseP = false;
+        bool caseC = false;
+        bool envP = false;
+        bool envC = false;
+        bool casePEnv = false;
+        bool rien = false;
+        bool surEnv = false;
+        bool rienC = false;
+        bool caseCE = false;
 
         //grille pour toute les images du jeu
         UCImage[,] grilleUI;
@@ -226,129 +230,62 @@ namespace sokosoko
         }
         private void move()
         {
-            if(touchPoint == true)
+            if(caseP || casePEnv)
             {
-                // si le user passe sur un env pour changer l'img
-                fond[y, x] = '+';
-                if (persoON && fond[laterY, laterX] == '+')
+                foncMoveCase();
+                if (wallC || caseC)
                 {
-                    if(laterX == x && laterY == y)
-                    {
-                        fond[laterY, laterX] = '+';
-                    }
-                    else
-                    {
-                        fond[laterY, laterX] = '.';
-                    }
-                    
+                    x = laterX;
+                    y = laterY;
                 }
-                else
+                if (envC)
                 {
-                    fond[laterY, laterX] = ' ';
+                    moveBoxEnv();
+                    caseCE = true;
+                    resultPlayer++;
                 }
-
-                touchPoint = false;
-
-            }
-            else if (fond[laterY, laterX] == '+' && touchPoint == false) 
-            {
-                if(laterY != y || laterX != x)
+                if (rienC)
                 {
-                    if (y / laterY != 1 || y % laterY != 0)
-                    {
-                        if (plus == true)
-                        {
-                            laterGY = y;
-                            laterGX = x;
-                            comCase(fond[y + 1, x]);
-                        }
-                        else
-                        {
-                            laterGY = y;
-                            laterGX = x;
-                            comCase(fond[y - 1, x]);
-                        }
-                    }
-                    else if (x / laterX != 1 || x % laterX != 0)
-                    {
-                        if (plus == true)
-                        {
-                            laterGX = x;
-                            laterGY = y;
-                            comCase(fond[y, x + 1]);
-                        }
-                        else
-                        {
-                            laterGX = x;
-                            laterGY = y;
-                            comCase(fond[y, x - 1]);
-                        }
-                    }
-                    if (devantMur && devantR == false)
-                    {
-                        fond[y, x] = '+';
-                    }
-                    else
-                    {
-                        fond[laterY, laterX] = '.';
-                        fond[y, x] = '@';
-                        persoON = false;
-                    }
+                    moveBox();
+                    surEnv = false;
                 }
             }
             else
             {
-                // déplacement basique
-                if (y / laterY != 1 || y % laterY != 0)
+                if(wallP)
                 {
-                    if (plus == true)
+                    x = laterX;
+                    y = laterY;
+                }
+                if(envP)
+                {
+                    if (fond[laterY, laterX] == '+')
                     {
-                        laterGY = y;
-                        laterGX = x;
-                        comCase(fond[y + 1, x]);
+                        fond[y, x] = '+';
+                        fond[laterY, laterX] = '.';
                     }
                     else
                     {
-                        laterGY = y;
-                        laterGX = x;
-                        comCase(fond[y - 1, x]);
+                        fond[y, x] = '+';
+                        fond[laterY, laterX] = ' ';
                     }
+                    surEnv = true;
                 }
-                else if (x / laterX != 1 || x % laterX != 0)
+                if(rien) 
                 {
-                    if (plus == true)
+                    if(surEnv)
                     {
-                        laterGX = x;
-                        laterGY = y;
-                        comCase(fond[y, x + 1]);
+                        fond[y, x] = '@';
+                        fond[laterY, laterX] = '.';
+                        surEnv = false;
                     }
                     else
                     {
-                        laterGX = x;
-                        laterGY = y;
-                        comCase(fond[y, x - 1]);
+                        fond[y, x] = '@';
+                        fond[laterY, laterX] = ' ';
                     }
                 }
-                fond[laterY, laterX] = ' ';
-                if (fond[laterY, laterX] == '+' && devantR == true || fond[y, x] == '*' && devantR == true)
-                {
-                    fond[y, x] = '+';
-                }
-                else
-                {
-                    fond[y, x] = '@';
-                }
-
             }
-            if(moveCase == true)
-            {
-                // si une case doit être déplacer
-                foncMoveCase();
-                
-            }
-            
-            
-            
         }
         public void beforeMove(Key keys)
         {
@@ -387,37 +324,24 @@ namespace sokosoko
         }
         public void scan()
         {
-            devantR = false;
+            resetVar();
             //savoir se qu'il y a devant lui (wiki sokoban)
             switch(fond[y,x])
             {
                 case '#':
-                    // retour au placement d'avant pour pas bouger
-                    x = laterX;
-                    y = laterY;
+                    wallP = true;
                     break;
                 case '.':
-                    // si c'est un endroit ou il y a un env
-                    touchPoint = true;
-                    persoON = true;
+                    envP = true;
                     break;
                 case '$':
-                    // si il y a une case devant lui
-                    moveCase = true;
-                    caseON = false;
+                    caseP = true;
                     break;
                 case '*':
-                    // si il y a une case sur un env devant lui
-                    // enable c'est pour déplacer et laisser une img d'env après le mouvement de la case
-                    if(laterX == x && laterY == y)
-                    {
-                        enable = true;
-                    }
-                    caseON = true;
-                    moveCase = true;
+                    casePEnv = true;
                     break;
                 default:
-                    devantR = true;
+                    rien = true;
                     break;
             }
         }
@@ -447,14 +371,12 @@ namespace sokosoko
                     laterGY = y;
                     laterGX = x;
                     deufoncCase(fond[y + 1, x]);
-                    switchcolor(y + 1, x, 1);
                 }
                 else
                 {
                     laterGY = y;
                     laterGX = x;
                     deufoncCase(fond[y - 1, x]);
-                    switchcolor(y - 1, x, 1);
                 }
             }
             else if (x / laterX != 1 || x % laterX != 0)
@@ -464,148 +386,42 @@ namespace sokosoko
                     laterGX = x;
                     laterGY = y;
                     deufoncCase(fond[y, x + 1]);
-                    switchcolor(y, x + 1, 0);
                 }
                 else
                 {
                     laterGX = x;
                     laterGY = y;
                     deufoncCase(fond[y, x - 1]);
-                    switchcolor(y, x - 1, 0);
                 }
-            }
-            moveCase = false;
-            if (fond[laterY, laterX] != '.' && laterX != x && laterY != y)
-            {
-                fond[laterY, laterX] = ' ';
-            }
-            if(enable == true && fond[y, x] == '+')
-            {
-               enable = false;
-            }
-            else if (caseON == true)
-            {
-                
-            }
-            else if(fond[laterY, laterX] == '+')
-            {
-
-            }
-            else
-            {
-                fond[y, x] = '@';
             }
         }
 
         public void deufoncCase(char duTab)
         {
+            resetVar();
             // savoir se qu'il y a devant la case
             switch(duTab)
             {
                 case '#':
-                    x = laterX;
-                    y = laterY;
-                    devantMur = true;
+                    wallC = true;
                     break;
                 case '$':
-                    x = laterX;
-                    y = laterY;
-                    devantMur = true;
+                    caseC = true;
                     break;
                 case '*':
-                    x = laterX;
-                    y = laterY;
-                    devantMur = true;
+                    caseC = true;
                     break;
                 case '.':
-                    // color c'est pour changer futurement l'affichage de la case sur l'env
-                    color = true;
-                    devantMur = false;
+                    envC = true;
                     break;
-                default: 
-                    color = false;
-                    devantMur = false;
+                default:
+                    rienC = true;
                     break;
             }
         }
         public void switchcolor(int grandY, int grandX, int p)
         {
-            if(color == true)
-            {
-                // changer l'affichage de la case si il est sur l'env
-                fond[grandY, grandX] = '*';
-                if (laterGX != grandX || laterGY != grandY)
-                {
-                    // si il est sur l'env il gagne un "point"
-                    resultPlayer++;
-                }
-                if (caseON == true)
-                {
-                    resultPlayer--;
-                    fond[y, x] = '+';
-                }
-                
-            }
-            else if (enable == false)
-            {
-                // si la case sort de l'env changer l'affichage
-                if (caseON == true)
-                {
-                    resultPlayer--;
-                }
-                if (fond[laterY, laterX] == '+') 
-                {
-                    fond[y, x] = '+';
-                }
-                else
-                {
-                    if (fond[y,x] == '+')
-                    {
-                        fond[y, x] = '+';
-                    }
-                    else
-                    {
-                        fond[y, x] = '@';
-                    }
-                    
-                }
-                fond[grandY, grandX] = '$';
-                // il perd un point
-                
-                
-            }
-            else
-            {
-                // déplacement normal
-                fond[grandY, grandX] = '$';
-                fond[y, x] = '+';
-            }
-            if (devantMur == true)
-            {
-                if (caseON == true)
-                {
-                    fond[laterGY, laterGX] = '*';
-                    //if(persoON == false)
-                    //{
-                    //    fond[y, x] = '@';
-                    //}
-                    resultPlayer++;
-                }
-                else
-                {
-                    fond[laterGY, laterGX] = '$';
-                    if(persoON || fond[laterY, laterX] == '+')
-                    {
-                        fond[laterY, laterX] = '+';
-                    }
-                    else
-                    {
-                        fond[laterY, laterX] = '@';
-                    }
-                    
-                }
-
-            }
+            
             
         }
 
@@ -651,28 +467,18 @@ namespace sokosoko
                 }
             }
         }
-        public void comCase(char duTab)
+        public void resetVar()
         {
-            switch (duTab)
-            {
-                case '#':
-                    devantMur = true;
-                    break;
-                case '$':
-                    devantMur = true;
-                    break;
-                case '*':
-                    devantMur = true;
-                    break;
-                case '.':
-                    color = true;
-                    devantMur = false;
-                    break;
-                default:
-                    color = false;
-                    devantMur = false;
-                    break;
-            }
+            wallP = false;
+            wallC = false;
+            caseP = false;
+            caseC = false;
+            envP = false;
+            envC = false;
+            casePEnv = false;
+            rien = false;
+            rienC = false;
+            caseCE = false;
         }
 
         //public void difficult()
@@ -681,5 +487,97 @@ namespace sokosoko
 
         //    DialogResult rep = MessageBox.Show(ecrit, )
         //}
+        public void moveBox()
+        {
+            if (y / laterY != 1 || y % laterY != 0)
+            {
+                //scan si il c'est déplacer en avant ou arrière
+                if (plus == true)
+                {
+                    // garder position avant de la case
+                    fond[y + 1, x] = '$';
+                    if(envC)
+                    {
+
+                    }
+                    sup();
+                }
+                else
+                {
+                    fond[y - 1, x] = '$';
+                    
+                    sup();
+                }
+            }
+            else if (x / laterX != 1 || x % laterX != 0)
+            {
+                if (plus == true)
+                {
+                    fond[y, x + 1] = '$';
+                    
+                    sup();
+                }
+                else
+                {
+                    fond[y, x - 1] = '$';
+                    
+                    sup();
+                }
+            }
+        }
+        public void sup()
+        {
+            if(fond[y, x] == '*')
+            {
+                fond[y, x] = '+';
+                resultPlayer--;
+                surEnv = true;
+            }
+            else
+            {
+                fond[y, x] = '@';
+            }
+            if (fond[laterY, laterX] == '+')
+            {
+                fond[laterY, laterX] = '.';
+                
+            }
+            else
+            {
+                fond[laterY, laterX] = ' ';
+                //surEnv = false;
+            }
+            
+        }
+        public void moveBoxEnv()
+        {
+            if (y / laterY != 1 || y % laterY != 0)
+            {
+                //scan si il c'est déplacer en avant ou arrière
+                if (plus == true)
+                {
+                    fond[y + 1, x] = '*';
+                    sup();
+                }
+                else
+                {
+                    fond[y - 1, x] = '*';
+                    sup();
+                }
+            }
+            else if (x / laterX != 1 || x % laterX != 0)
+            {
+                if (plus == true)
+                {
+                    fond[y, x + 1] = '*';
+                    sup();
+                }
+                else
+                {
+                    fond[y, x - 1] = '*';
+                    sup();
+                }
+            }
+        }
     }
 }
