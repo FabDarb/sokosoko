@@ -5,10 +5,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:sokosoko"
         mc:Ignorable="d"
-        Title="Window1" Height="100" Width="200">
+        Title="Window1" Height="250" Width="300">
     <Grid>
-        <RadioButton x:Name="raFacile" Content="Facile" HorizontalAlignment="Left" Margin="71,19,0,0" VerticalAlignment="Top" Checked="raFacile_Checked"/>
+        <RadioButton x:Name="raFacile" Content="Facile" HorizontalAlignment="Left" Margin="71,19,0,0" VerticalAlignment="Top" Checked="raFacile_Checked" IsChecked="False"/>
         <RadioButton x:Name="ramoyen" Content="moyen" HorizontalAlignment="Left" Margin="71,39,0,0" VerticalAlignment="Top" Checked="ramoyen_Checked"/>
-        <RadioButton x:Name="radifficile" Content="difficile" HorizontalAlignment="Center" Margin="0,59,0,0" VerticalAlignment="Top" Checked="radifficile_Checked"/>
+        <RadioButton x:Name="radifficile" Content="difficile" HorizontalAlignment="Left" Margin="71,59,0,0" VerticalAlignment="Top" Checked="radifficile_Checked"/>
+        <Label x:Name="LblChoix" Content="Facile" HorizontalAlignment="Left" Margin="30,94,0,0" VerticalAlignment="Top"/>
+        <Button x:Name="btnAdd" Content="Choisir" HorizontalAlignment="Left" Margin="118,97,0,0" VerticalAlignment="Top" Click="btnAdd_Click"/>
+        <TextBox x:Name="txtNb" HorizontalAlignment="Left" Height="27" Margin="152,39,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="32"/>
     </Grid>
 </Window>

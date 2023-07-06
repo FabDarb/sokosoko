@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Win32.SafeHandles;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -54,6 +55,7 @@ namespace sokosoko
         bool surEnv = false;
         bool rienC = false;
         bool caseCE = false;
+        string level;
 
         //grille pour toute les images du jeu
         UCImage[,] grilleUI;
@@ -61,6 +63,7 @@ namespace sokosoko
         {
             InitializeComponent();
             //les deux tableaux multi
+            spawnFen();
             getFile();
             grilleUI = new UCImage[large, grand];
             
@@ -249,7 +252,11 @@ namespace sokosoko
                 if (rienC)
                 {
                     moveBox();
-                    surEnv = false;
+                    if(!casePEnv)
+                    {
+                        surEnv = false;
+                    }
+                    
                 }
             }
             else
@@ -326,7 +333,7 @@ namespace sokosoko
         }
         public void scan()
         {
-            resetVar();
+            resetVarCasePlay();
             //savoir se qu'il y a devant lui (wiki sokoban)
             switch(fond[y,x])
             {
@@ -404,7 +411,7 @@ namespace sokosoko
         /// <param name="duTab">caractère du tableau</param>
         public void deufoncCase(char duTab)
         {
-            resetVar();
+            resetVarCase();
             // savoir se qu'il y a devant la case
             switch(duTab)
             {
@@ -438,8 +445,8 @@ namespace sokosoko
         }
         public void getFile()
         {
-            
-            string[] lines = File.ReadAllLines("./3 First steps - Expert/3 First steps - Expert_29.txt");
+            var chou = new sokosoko.Window1();
+            string[] lines = File.ReadAllLines($"./{chou.chois}/{level}");
             foreach (var line in lines)
             {
                 if (line.Trim()[0] == '#')
@@ -468,18 +475,27 @@ namespace sokosoko
                 }
             }
         }
-        public void resetVar()
+        public void resetVarCase()
         {
-            wallP = false;
+            
             wallC = false;
-            caseP = false;
+            
             caseC = false;
-            envP = false;
+            
             envC = false;
-            casePEnv = false;
-            rien = false;
+            
+            
             rienC = false;
             caseCE = false;
+            
+        }
+        public void resetVarCasePlay()
+        {
+            rien = false;
+            envP = false;
+            caseP = false;
+            wallP = false;
+            casePEnv = false;
         }
 
         public void difficult()
@@ -586,6 +602,24 @@ namespace sokosoko
             griid.Children.Clear();
             griid.RowDefinitions.Clear();
             griid.ColumnDefinitions.Clear();
+        }
+        public void spawnFen()
+        {
+            Window1 cc = new Window1();
+            cc.ShowDialog();
+            var chou = new sokosoko.Window1();
+            if (chou.test == 1)
+            {
+                level = $"1 First steps - Beginner_{chou.numMonde}.txt";
+            }
+            else if (chou.test == 2)
+            {
+                level = $"2 First steps - Advanced_{chou.numMonde}.txt";
+            }
+            else
+            {
+                level = $"3 First steps -Expert_{chou.numMonde}.txt";
+            }
         }
     }
 }
