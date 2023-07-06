@@ -553,6 +553,7 @@ namespace sokosoko
             else
             {
                 fond[y, x] = '@';
+                surEnv = false;
             }
             if (fond[laterY, laterX] == '+')
             {
