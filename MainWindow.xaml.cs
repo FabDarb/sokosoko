@@ -69,6 +69,7 @@ namespace sokosoko
         }
         public void Create()
         {
+
             //création de la gride
             for(int i = 0; i < large; i++)
             {
@@ -220,6 +221,7 @@ namespace sokosoko
                     Dump();
                     break;
                 case Key.R:
+                    
                     break;
             }
             // déroulement de changement du tableau de fond
@@ -396,6 +398,10 @@ namespace sokosoko
             }
         }
 
+        /// <summary>
+        /// voir se qu'il y a après la case
+        /// </summary>
+        /// <param name="duTab">caractère du tableau</param>
         public void deufoncCase(char duTab)
         {
             resetVar();
@@ -419,11 +425,6 @@ namespace sokosoko
                     break;
             }
         }
-        public void switchcolor(int grandY, int grandX, int p)
-        {
-            
-            
-        }
 
         public void finCode()
         {
@@ -438,7 +439,7 @@ namespace sokosoko
         public void getFile()
         {
             
-            string[] lines = File.ReadAllLines("./1 First steps - Beginner/1 First steps - Beginner_18.txt");
+            string[] lines = File.ReadAllLines("./3 First steps - Expert/3 First steps - Expert_29.txt");
             foreach (var line in lines)
             {
                 if (line.Trim()[0] == '#')
@@ -481,12 +482,12 @@ namespace sokosoko
             caseCE = false;
         }
 
-        //public void difficult()
-        //{
-        //    string ecrit = "quel difficulté vous voudriez ?";
+        public void difficult()
+        {
+            
 
-        //    DialogResult rep = MessageBox.Show(ecrit, )
-        //}
+            
+        }
         public void moveBox()
         {
             if (y / laterY != 1 || y % laterY != 0)
@@ -578,6 +579,13 @@ namespace sokosoko
                     sup();
                 }
             }
+        }
+
+        public void del()
+        {
+            griid.Children.Clear();
+            griid.RowDefinitions.Clear();
+            griid.ColumnDefinitions.Clear();
         }
     }
 }
