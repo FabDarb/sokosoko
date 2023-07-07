@@ -38,6 +38,7 @@ namespace sokosoko
         int laterY = 3;
         int laterX = 1;
         char[,] fond;
+        char[,] secourGrille;
         bool plus = false;
         int nb_DePoint = 0;
         int resultPlayer = 0;
@@ -56,6 +57,9 @@ namespace sokosoko
         bool rienC = false;
         bool caseCE = false;
         string level;
+        string choi;
+        int nb_caseON = 0;
+        bool delOn = false;
 
         //grille pour toute les images du jeu
         UCImage[,] grilleUI;
@@ -63,18 +67,25 @@ namespace sokosoko
         {
             InitializeComponent();
             //les deux tableaux multi
-            spawnFen();
-            getFile();
-            grilleUI = new UCImage[large, grand];
+            
             
             //remp();
             Create();
         }
         public void Create()
         {
-
+            griid.Children.Clear();
+            griid.RowDefinitions.Clear();
+            griid.ColumnDefinitions.Clear();
+            nb_DePoint = 0;
+            resultPlayer = 0;
+            large = 0;
+            grand = 0;
+            spawnFen();
+            getFile();
+            grilleUI = new UCImage[large, grand];
             //création de la gride
-            for(int i = 0; i < large; i++)
+            for (int i = 0; i < large; i++)
             {
                 griid.RowDefinitions.Add(new RowDefinition());
             }
@@ -107,6 +118,9 @@ namespace sokosoko
                             break;
                         case '*':
                             img.caseONJu();
+                            nb_DePoint++;
+                            resultPlayer++;
+                            nb_caseON++;
                             break;
                         default:
                             img.groud();
@@ -143,6 +157,7 @@ namespace sokosoko
                             break;
                         case '*':
                             img.caseONJu();
+                            //resultPlayer++;
                             break;
                         case '+':
                             img.playerONEnv(ou);
@@ -215,6 +230,7 @@ namespace sokosoko
 
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
+            delOn = false;
             //controle de la touche utiliser
             Debug.WriteLine(e.Key);
             switch(e.Key)
@@ -224,14 +240,19 @@ namespace sokosoko
                     Dump();
                     break;
                 case Key.R:
-                    
+                    del();
+                    delOn = true;
                     break;
             }
             // déroulement de changement du tableau de fond
-            beforeMove(e.Key);
-            move();
-            refresh();
-            finCode();
+            if(!delOn)
+            {
+                beforeMove(e.Key);
+                move();
+                refresh();
+                finCode();
+            }
+            
         }
         private void move()
         {
@@ -368,6 +389,7 @@ namespace sokosoko
             Debug.WriteLine(y);
         }
 
+
         public void foncMoveCase()
         {
             // scan si il c'est déplacer sur l'axe y ou x
@@ -440,13 +462,12 @@ namespace sokosoko
             {
                 MessageBox.Show("good game");
                 // down le program
-                Environment.Exit(0);
+                Create();
             }
         }
         public void getFile()
         {
-            var chou = new sokosoko.Window1();
-            string[] lines = File.ReadAllLines($"./{chou.chois}/{level}");
+            string[] lines = File.ReadAllLines($"./{choi}/{level}");
             foreach (var line in lines)
             {
                 if (line.Trim()[0] == '#')
@@ -460,6 +481,7 @@ namespace sokosoko
                 }
             }
             fond = new char[large, grand];
+            secourGrille = new char[large, grand];
             int taileGLigne = 0;
             foreach (var line in lines)
             {
@@ -469,7 +491,9 @@ namespace sokosoko
                     foreach (char c in line)
                     {
                         fond[taileGLigne, t] = c;
+                        secourGrille[taileGLigne, t] = c;
                         t++;
+                        
                     }
                     taileGLigne++;
                 }
@@ -498,12 +522,6 @@ namespace sokosoko
             casePEnv = false;
         }
 
-        public void difficult()
-        {
-            
-
-            
-        }
         public void moveBox()
         {
             if (y / laterY != 1 || y % laterY != 0)
@@ -600,27 +618,41 @@ namespace sokosoko
 
         public void del()
         {
-            griid.Children.Clear();
-            griid.RowDefinitions.Clear();
-            griid.ColumnDefinitions.Clear();
+            for(int i = 0; i < large; i++)
+            {
+                for(int e = 0; e < grand; e++)
+                {
+                    fond[i, e] = secourGrille[i, e];
+                    if (secourGrille[i, e] == '@')
+                    {
+                        y = i;
+                        x = e;
+                    }
+                }
+            }
+            resultPlayer = nb_caseON;
+            ou = 0;
+            resetVarCase();
+            resetVarCasePlay();
+            refresh();
         }
         public void spawnFen()
         {
             Window1 cc = new Window1();
             cc.ShowDialog();
-            var chou = new sokosoko.Window1();
-            if (chou.test == 1)
+            if (cc.test == 1)
             {
-                level = $"1 First steps - Beginner_{chou.numMonde}.txt";
+                level = $"1 First steps - Beginner_{cc.numMonde}.txt";
             }
-            else if (chou.test == 2)
+            else if (cc.test == 2)
             {
-                level = $"2 First steps - Advanced_{chou.numMonde}.txt";
+                level = $"2 First steps - Advanced_{cc.numMonde}.txt";
             }
             else
             {
-                level = $"3 First steps -Expert_{chou.numMonde}.txt";
+                level = $"3 First steps - Expert_{cc.numMonde}.txt";
             }
+            choi = cc.chois;
         }
     }
 }

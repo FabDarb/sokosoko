@@ -24,6 +24,13 @@ namespace sokosoko
         {
             InitializeComponent();
         }
+
+        public void changeTaill(int taille)
+        {
+            Width = taille;
+            Height = taille;
+            
+        }
         public void clearAllImage()
         {
             crate.Visibility = Visibility.Hidden;

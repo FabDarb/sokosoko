@@ -23,7 +23,7 @@ namespace sokosoko
     {
         public int numMonde = 0;
         public int test = 1;
-        public string lvl;
+        public string lvl = "1 First steps - Beginner_0.txt";
         public string chois = "1 First steps - Beginner";
         public Window1()
         {
