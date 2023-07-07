@@ -134,6 +134,12 @@ namespace sokosoko
                             resultPlayer++;
                             nb_caseON++;
                             break;
+                        case '+':
+                            y = i;
+                            x = e;
+                            surEnv = true;
+                            img.playerONEnv(0);
+                            break;
                         default:
                             img.groud();
                             break;
