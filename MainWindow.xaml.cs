@@ -79,11 +79,13 @@ namespace sokosoko
             griid.ColumnDefinitions.Clear();
             nb_DePoint = 0;
             resultPlayer = 0;
+            nb_caseON = 0;
             large = 0;
             grand = 0;
             spawnFen();
             getFile();
             grilleUI = new UCImage[large, grand];
+            
             //création de la gride
             for (int i = 0; i < large; i++)
             {
@@ -99,6 +101,16 @@ namespace sokosoko
                 for (int e = 0; e < grand; e++)
                 {
                     UCImage img = new UCImage();
+                    int test = 1000 / large;
+                    if (test > 50)
+                    {
+                        test = 50;
+                    }
+                    else
+                    {
+                        test = 40;
+                    }
+                    img.changeTaill(test);
                     switch (fond[i, e])
                     {
                         case '#':
@@ -241,6 +253,10 @@ namespace sokosoko
                     break;
                 case Key.R:
                     del();
+                    delOn = true;
+                    break;
+                case Key.K:
+                    Create();
                     delOn = true;
                     break;
             }
@@ -631,6 +647,7 @@ namespace sokosoko
                 }
             }
             resultPlayer = nb_caseON;
+            surEnv = false;
             ou = 0;
             resetVarCase();
             resetVarCasePlay();
@@ -654,5 +671,6 @@ namespace sokosoko
             }
             choi = cc.chois;
         }
+
     }
 }

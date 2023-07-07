@@ -28,6 +28,8 @@ namespace sokosoko
         public Window1()
         {
             InitializeComponent();
+            superG.caseONJu();
+            lugi.pos(5);
         }
 
         private void raFacile_Checked(object sender, RoutedEventArgs e)
@@ -58,7 +60,8 @@ namespace sokosoko
             {
                 if (numMonde > 99 || numMonde < 0)
                 {
-                    txtNb.BorderBrush = Brushes.Red;
+                    numMonde = 0;
+                    test = 1;
                 }
                 else
                 {
@@ -70,7 +73,8 @@ namespace sokosoko
             {
                 if (numMonde > 79 || numMonde < 0)
                 {
-                    txtNb.BorderBrush = Brushes.Red;
+                    numMonde = 0;
+                    test = 2;
                 }
                 else
                 {
@@ -82,7 +86,8 @@ namespace sokosoko
             {
                 if (numMonde > 29 || numMonde < 0)
                 {
-                    txtNb.BorderBrush = Brushes.Red;
+                    numMonde = 0;
+                    test = 3;
                 }
                 else
                 {

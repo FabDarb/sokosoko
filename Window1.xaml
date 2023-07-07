@@ -13,5 +13,7 @@
         <Label x:Name="LblChoix" Content="Facile" HorizontalAlignment="Left" Margin="30,94,0,0" VerticalAlignment="Top"/>
         <Button x:Name="btnAdd" Content="Choisir" HorizontalAlignment="Left" Margin="118,97,0,0" VerticalAlignment="Top" Click="btnAdd_Click"/>
         <TextBox x:Name="txtNb" HorizontalAlignment="Left" Height="27" Margin="152,39,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="32"/>
+        <local:UCImage x:Name="lugi" HorizontalAlignment="Left" Margin="69,154,0,0" VerticalAlignment="Top"/>
+        <local:UCImage x:Name="superG" Margin="173,154,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="58"/>
     </Grid>
 </Window>

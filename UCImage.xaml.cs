@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -27,9 +28,11 @@ namespace sokosoko
 
         public void changeTaill(int taille)
         {
-            Width = taille;
-            Height = taille;
-            
+            UCImageSoko.Width = taille;
+            UCImageSoko.Height = taille;
+            UCgrid.Width = taille;
+            UCgrid.Height = taille;
+
         }
         public void clearAllImage()
         {
@@ -122,6 +125,10 @@ namespace sokosoko
                     break;
                 case 4:
                     player_Case.Visibility = Visibility.Visible;
+                    break;
+                case 5:
+                    player_right.Visibility = Visibility.Visible;
+                    ground.Visibility = Visibility.Hidden;
                     break;
             }
         }
