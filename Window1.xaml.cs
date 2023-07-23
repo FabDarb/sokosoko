@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.DirectoryServices.ActiveDirectory;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,7 +22,7 @@ namespace sokosoko
     /// </summary>
     public partial class Window1 : Window
     {
-        public int numMonde = 0;
+        public int numMonde;
         public int test = 1;
         public string lvl = "1 First steps - Beginner_0.txt";
         public string chois = "1 First steps - Beginner";
@@ -30,6 +31,8 @@ namespace sokosoko
             InitializeComponent();
             superG.caseONJu();
             lugi.pos(5);
+            numMonde = int.Parse(File.ReadAllText("save.txt"));
+            txtNb.Text = numMonde.ToString();
         }
 
         private void raFacile_Checked(object sender, RoutedEventArgs e)
@@ -95,7 +98,20 @@ namespace sokosoko
                     //lvl = $"3 First steps -Expert_{numMonde}.txt";
                 }
             }
+
             this.Close();
+        }
+
+        private void Btn_Plus_Click(object sender, RoutedEventArgs e)
+        {
+            numMonde++;
+            txtNb.Text = numMonde.ToString();
+        }
+
+        private void Btn_moin_Click(object sender, RoutedEventArgs e)
+        {
+            numMonde--;
+            txtNb.Text = numMonde.ToString();
         }
     }
 }

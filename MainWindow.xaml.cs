@@ -85,7 +85,6 @@ namespace sokosoko
             spawnFen();
             getFile();
             grilleUI = new UCImage[large, grand];
-            
             //création de la gride
             for (int i = 0; i < large; i++)
             {
@@ -676,6 +675,7 @@ namespace sokosoko
                 level = $"3 First steps - Expert_{cc.numMonde}.txt";
             }
             choi = cc.chois;
+            File.WriteAllText("save.txt", cc.numMonde.ToString());
         }
 
     }
