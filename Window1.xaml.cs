@@ -34,6 +34,7 @@ namespace sokosoko
             lugi.pos(5);
             numMonde = int.Parse(File.ReadAllText("save.txt"));
             txtNb.Text = numMonde.ToString();
+            check();
         }
 
         private void raFacile_Checked(object sender, RoutedEventArgs e)
@@ -98,8 +99,17 @@ namespace sokosoko
 
         void check()
         {
-            btnAdd.IsEnabled = true;
-            if (numMonde > num || numMonde < 0)
+            string test = txtNb.Text.ToString();
+            if(test != "")
+            {
+                numMonde = int.Parse(test);
+                btnAdd.IsEnabled = true;
+                if (numMonde > num || numMonde < 0)
+                {
+                    btnAdd.IsEnabled = false;
+                }
+            }
+            else
             {
                 btnAdd.IsEnabled = false;
             }
