@@ -348,6 +348,7 @@ namespace sokosoko
             switch(keys)
             {
                 case Key.Up:
+                case Key.W:
                     //déplacement
                     y--;
                     // savoir pour l'img quel direction il a eu
@@ -356,16 +357,19 @@ namespace sokosoko
                     plus = false;
                     break;
                 case Key.Down:
+                case Key.S:
                     y++;
                     ou = 2;
                     plus = true;
                     break;
                 case Key.Left:
+                case Key.A:
                     x--;
                     ou = 1;
                     plus = false;
                     break;
                 case Key.Right:
+                case Key.D:
                     x++;
                     ou = 0;
                     plus = true;
