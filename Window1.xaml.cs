@@ -99,6 +99,7 @@ namespace sokosoko
 
         void check()
         {
+            lblError.Visibility = Visibility.Hidden;
             string test = txtNb.Text.ToString();
             if(test != "")
             {
@@ -107,6 +108,7 @@ namespace sokosoko
                 if (numMonde > num || numMonde < 0)
                 {
                     btnAdd.IsEnabled = false;
+                    lblError.Visibility = Visibility.Visible;
                 }
             }
             else

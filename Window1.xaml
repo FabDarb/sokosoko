@@ -19,5 +19,6 @@
         <Button x:Name="Btn_Plus" Content="--&gt;" HorizontalAlignment="Left" Margin="202,54,0,0" VerticalAlignment="Top" Click="Btn_Plus_Click"/>
         <Label Content="0" HorizontalAlignment="Left" Margin="149,79,0,0" VerticalAlignment="Top" Height="27" Width="23"/>
         <Label x:Name="lblMax" Content="99" HorizontalAlignment="Left" Margin="202,79,0,0" VerticalAlignment="Top" Height="27" Width="23" Cursor=""/>
+        <Label x:Name="lblError" Content="niveau inexistant" HorizontalAlignment="Left" Margin="173,117,0,0" VerticalAlignment="Top" Width="103"/>
     </Grid>
 </Window>
